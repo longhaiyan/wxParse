@@ -53,6 +53,15 @@ function removeDOCTYPE(html) {
         .replace(/<.*!DOCTYPE.*\>\n/, '');
 }
 
+/**
+ * 去除富文本字符串中的 style 标签
+ * @param {String} html 富文本字符串
+ */
+function removeStyleCss(html) {
+    return html
+        .replace(/\<style(.|\n)*\<\/style\>/gm, '');
+}
+
 function trimHtml(html) {
   return html
         .replace(/\r?\n+/g, '')
@@ -61,11 +70,21 @@ function trimHtml(html) {
         .replace(/[ ]+</ig, '<')
 }
 
+/**
+ * 对富文本的某些特殊信息进行过滤
+ * @param {String} html 富文本字符串
+ */
+function filterHtml(html){
+    html = removeDOCTYPE(html);
+    html = removeStyleCss(html);
+    html = trimHtml(html);
+    return html
+}
+
 
 function html2json(html, bindName) {
     //处理字符串
-    html = removeDOCTYPE(html);
-    html = trimHtml(html);
+    html = filterHtml(html);
     html = wxDiscode.strDiscode(html);
     //生成node节点
     var bufArray = [];
